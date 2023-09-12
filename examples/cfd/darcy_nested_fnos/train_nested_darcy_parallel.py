@@ -167,7 +167,7 @@ class SetUpInfrastructure:
             padding=model_cfg.fno.padding,
         ).to(dist.device)
 
-        print(f"dist.local_rank: {dist.local_rank}, device id: {dist.device}")
+        # print(f"dist.local_rank: {dist.local_rank}, device id: {dist.device}")
         # exit()
 
         # distributed data parallel for multi-node training
