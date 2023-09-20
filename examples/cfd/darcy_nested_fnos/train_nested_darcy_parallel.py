@@ -168,7 +168,6 @@ class SetUpInfrastructure:
         ).to(dist.device)
 
         # print(f"dist.local_rank: {dist.local_rank}, device id: {dist.device}")
-        # exit()
 
         # distributed data parallel for multi-node training
         if dist.world_size > 1:
