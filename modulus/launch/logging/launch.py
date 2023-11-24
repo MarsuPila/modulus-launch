@@ -356,18 +356,23 @@ class LaunchLogger(object):
         use_mlflow : bool, optional
             Use MLFlow logging, by default False
         """
+
         if wandb.run is None and use_wandb:
             PythonLogger().warning("WandB not initialized, turning off")
             use_wandb = False
-
-        if LaunchLogger.mlflow_run is None and use_mlflow:
-            PythonLogger().warning("MLFlow not initialized, turning off")
-            use_mlflow = False
 
         if use_wandb:
             LaunchLogger.toggle_wandb(True)
             wandb.define_metric("epoch")
             wandb.define_metric("iter")
 
-        if use_mlflow:
+        # let only root process log to mlflow
+        if DistributedManager.is_initialized():
+            root = DistributedManager().rank == 0
+
+        if LaunchLogger.mlflow_run is None and use_mlflow and root:
+            PythonLogger().warning("MLFlow not initialized, turning off")
+            use_mlflow = False
+
+        if use_mlflow and root:
             LaunchLogger.toggle_mlflow(True)
